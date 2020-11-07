@@ -1,12 +1,16 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, Alert} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {TextInput, TouchableOpacity} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
+import {useFavorites} from '../hooks/useFavorite';
 
 export default function Home() {
   const [searchText, SetSearchText] = useState<string>('');
 
   const navigation = useNavigation();
+
+  const {favorites} = useFavorites();
 
   function handleDetailsPage(search: string) {
     if (search === '') {
@@ -32,7 +36,9 @@ export default function Home() {
         </TouchableOpacity>
       </View>
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <Text>Favoritos</Text>
+        {favorites.map((fav) => (
+          <Text>{fav}</Text>
+        ))}
       </View>
     </View>
   );

@@ -28,10 +28,26 @@ interface Vehicle {
   vehicle_class: string;
 }
 
+interface Starship {
+  name: string;
+  model: string;
+  manufacturer: string;
+  cost_in_credits: string;
+  lenght: string;
+  max_atmosphering_speed: string;
+  crew: string;
+  passengers: string;
+  cargo_capacity: string;
+  consumables: string;
+  hyperdrive_rating: string;
+  starship_class: string;
+}
+
 export default function Detail() {
   const route = useRoute();
   const [film, SetFilm] = useState<Film>();
   const [vehicle, SetVehicle] = useState<Vehicle>();
+  const [starship, SetStarhip] = useState<Starship>();
   const search = route.params.payload;
   console.log('vindo do result', search);
 
@@ -39,6 +55,7 @@ export default function Detail() {
     axios.get(`${search}`).then((response) => {
       SetFilm(response.data);
       SetVehicle(response.data);
+      SetStarhip(response.data);
     });
   }, [search]);
 
@@ -47,6 +64,10 @@ export default function Detail() {
   }
 
   if (!vehicle) {
+    return <Text>Carregando...</Text>;
+  }
+
+  if (!starship) {
     return <Text>Carregando...</Text>;
   }
 
@@ -59,11 +80,28 @@ export default function Detail() {
           <Text>{film.producer}</Text>
         </View>
       ) : null}
-      {vehicle.manufacturer ? (
+      {vehicle.vehicle_class ? (
         <View style={styles.Container}>
+          <Text>Name:</Text>
           <Text>{vehicle.name}</Text>
+          <Text>Model:</Text>
           <Text>{vehicle.model}</Text>
+          <Text>Manufacturer:</Text>
           <Text>{vehicle.manufacturer}</Text>
+          <Text>Cost:</Text>
+          <Text>{vehicle.const_in_credits}</Text>
+          <Text>Consumables:</Text>
+          <Text>{vehicle.consumables}</Text>
+          <Text>Capacity:</Text>
+          <Text>{vehicle.cargo_capacity}</Text>
+          <Text>Vehicle Class:</Text>
+          <Text>{vehicle.vehicle_class}</Text>
+        </View>
+      ) : null}
+      {starship.starship_class ? (
+        <View style={styles.Container}>
+          <Text>Name:</Text>
+          <Text>{starship.name}</Text>
         </View>
       ) : null}
     </View>

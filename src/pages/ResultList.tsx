@@ -1,8 +1,10 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Alert} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import api from '../service/api';
 import {useRoute, useNavigation} from '@react-navigation/native';
 import {ScrollView, TouchableOpacity} from 'react-native-gesture-handler';
+import {useFavorites} from '../hooks/useFavorite';
 
 interface Characters {
   name: string;
@@ -22,7 +24,9 @@ interface Characters {
 
 export default function ResultLit() {
   const route = useRoute();
+  const {addFavorites} = useFavorites();
   const [character, SetCharacter] = useState<Characters[]>();
+  const [favorites, SetFavorites] = useState([]);
   const searchText = route.params.search;
   const navigation = useNavigation();
   useEffect(() => {
@@ -31,12 +35,28 @@ export default function ResultLit() {
       .then((res) => SetCharacter(res.data.results));
   }, [searchText]);
 
-  function handleSelected(payload: string) {
+  function handleSelected(payload: Array<string>) {
     navigation.navigate('Detail', {payload});
   }
 
-  function handelFavorite(payload: string) {
-    console.log(payload);
+  useEffect(() => {
+    AddingFavoriteStorage();
+    console.log(`storage_favorite${Math.random()}`);
+  }, [favorites]);
+
+  async function AddingFavoriteStorage() {
+    try {
+      await AsyncStorage.setItem(
+        `@storage_favorite${Math.random()}`,
+        JSON.stringify(favorites),
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  function handleFavorite(payload: string) {
+    SetFavorites([...favorites, payload]);
   }
   return (
     <View>
@@ -82,7 +102,7 @@ export default function ResultLit() {
               </TouchableOpacity>
             ))}
             <TouchableOpacity
-              onPress={() => handelFavorite(char.name)}
+              onPress={() => addFavorites(char.name)}
               style={styles.favoriteButton}>
               <Text>Favoritar</Text>
             </TouchableOpacity>

@@ -4,11 +4,15 @@ import {NavigationContainer} from '@react-navigation/native';
 
 import Routes from './routes';
 
+import AppProvider from './hooks';
+
 declare const global: {HermesInternal: null | {}};
 
 const App: React.FC = () => (
   <NavigationContainer>
-    <Routes />
+    <AppProvider>
+      <Routes />
+    </AppProvider>
   </NavigationContainer>
 );
 
