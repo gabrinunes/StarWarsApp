@@ -12,7 +12,7 @@ export default function Home() {
     if (search === '') {
       Alert.alert('Por favor digite sua pesquisa');
     } else {
-      navigation.navigate('Detail', {search});
+      navigation.navigate('ResultList', {search});
     }
   }
 
