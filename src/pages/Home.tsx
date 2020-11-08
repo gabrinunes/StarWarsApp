@@ -1,7 +1,11 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet, Alert} from 'react-native';
+import {View, Text, StyleSheet, Alert, Dimensions} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {TextInput, TouchableOpacity} from 'react-native-gesture-handler';
+import {
+  TextInput,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native-gesture-handler';
 import {useNavigation} from '@react-navigation/native';
 import {useFavorites} from '../hooks/useFavorite';
 
@@ -25,6 +29,7 @@ export default function Home() {
       <View style={styles.searchTextContainer}>
         <View style={styles.searchText}>
           <TextInput
+            style={{padding: 10}}
             value={searchText}
             onChangeText={(text) => SetSearchText(text)}
           />
@@ -36,9 +41,16 @@ export default function Home() {
         </TouchableOpacity>
       </View>
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        {favorites.map((fav) => (
-          <Text>{fav}</Text>
-        ))}
+        <Text>Favoritos:</Text>
+        <ScrollView>
+          <View style={{flex: 1}}>
+            {favorites.map((fav) => (
+              <TouchableOpacity onPress={() => handleDetailsPage(fav)}>
+                <Text style={styles.favoriteTextContainer}>{fav}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </ScrollView>
       </View>
     </View>
   );
@@ -49,13 +61,21 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'silver',
   },
+  favoriteTextContainer: {
+    width: Dimensions.get('window').width,
+    padding: 24,
+    borderRadius: 8,
+    backgroundColor: '#FFF',
+    marginBottom: 10,
+    marginTop: 28,
+  },
   searchTextContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
   searchText: {
-    width: 380,
+    width: Dimensions.get('screen').width,
     height: 50,
     borderRadius: 15,
     backgroundColor: 'rgba(255,255,255,0.8)',

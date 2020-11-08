@@ -15,7 +15,7 @@ interface FavContextData {
 const FavContext = createContext<FavContextData>({} as FavContextData);
 
 export const FavProvider: React.FC = ({children}) => {
-  const [favorites, setFavorites] = useState([]);
+  const [favorites, setFavorites] = useState<string[]>([]);
 
   useEffect(() => {
     console.log(favorites);
@@ -23,7 +23,13 @@ export const FavProvider: React.FC = ({children}) => {
 
   const addFavorites = useCallback(
     (payload: string) => {
-      setFavorites([...favorites, payload]);
+      const checkFavorites = favorites.find((fav) => fav === payload);
+      if (checkFavorites) {
+        Alert.alert('ja foi favoritado');
+      } else {
+        setFavorites([...favorites, payload]);
+        Alert.alert('Adicionado a sua lista de Favoritos');
+      }
     },
     [favorites],
   );

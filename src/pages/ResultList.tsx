@@ -24,9 +24,9 @@ interface Characters {
 
 export default function ResultLit() {
   const route = useRoute();
-  const {addFavorites} = useFavorites();
+  const {goBack} = useNavigation();
+  const {addFavorites, favorites} = useFavorites();
   const [character, SetCharacter] = useState<Characters[]>();
-  const [favorites, SetFavorites] = useState([]);
   const searchText = route.params.search;
   const navigation = useNavigation();
   useEffect(() => {
@@ -39,25 +39,25 @@ export default function ResultLit() {
     navigation.navigate('Detail', {payload});
   }
 
-  useEffect(() => {
-    AddingFavoriteStorage();
-    console.log(`storage_favorite${Math.random()}`);
-  }, [favorites]);
+  const favFind = favorites.find((fav) => fav === searchText);
 
-  async function AddingFavoriteStorage() {
-    try {
-      await AsyncStorage.setItem(
-        `@storage_favorite${Math.random()}`,
-        JSON.stringify(favorites),
-      );
-    } catch (error) {
-      console.log(error);
-    }
+  if (!character) {
+    return <Text>Carregando...</Text>;
   }
 
-  function handleFavorite(payload: string) {
-    SetFavorites([...favorites, payload]);
+  if (character.length === 0) {
+    return (
+      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+        <Text style={{fontSize: 16}}>
+          Não foi possível encontrar o personagem buscado :(
+        </Text>
+        <TouchableOpacity style={styles.BackHomeButton} onPress={goBack}>
+          <Text style={styles.BackHomeButtonText}>Home</Text>
+        </TouchableOpacity>
+      </View>
+    );
   }
+
   return (
     <View>
       <ScrollView>
@@ -101,11 +101,13 @@ export default function ResultLit() {
                 </Text>
               </TouchableOpacity>
             ))}
-            <TouchableOpacity
-              onPress={() => addFavorites(char.name)}
-              style={styles.favoriteButton}>
-              <Text>Favoritar</Text>
-            </TouchableOpacity>
+            {!favFind ? (
+              <TouchableOpacity
+                onPress={() => addFavorites(char.name)}
+                style={styles.favoriteButton}>
+                <Text>Favoritar</Text>
+              </TouchableOpacity>
+            ) : null}
           </View>
         ))}
       </ScrollView>
@@ -137,5 +139,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 15,
     backgroundColor: 'silver',
+  },
+  BackHomeButton: {
+    width: 200,
+    height: 50,
+    marginTop: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 15,
+    backgroundColor: 'rgba(255,255,255,0.8)',
+  },
+  BackHomeButtonText: {
+    fontSize: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
