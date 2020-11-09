@@ -75,33 +75,44 @@ export default function Detail() {
     <View style={{flex: 1}}>
       {film.director ? (
         <View style={styles.Container}>
+          <Text style={styles.DetailLabel}>Title:</Text>
           <Text>{film.title}</Text>
+          <Text style={styles.DetailLabel}>Director:</Text>
           <Text>{film.director}</Text>
+          <Text style={styles.DetailLabel}>Producer:</Text>
           <Text>{film.producer}</Text>
+          <Text style={styles.DetailLabel}>Release Date:</Text>
+          <Text>{film.release_date}</Text>
         </View>
       ) : null}
       {vehicle.vehicle_class ? (
         <View style={styles.Container}>
-          <Text>Name:</Text>
+          <Text style={styles.DetailLabel}>Name:</Text>
           <Text>{vehicle.name}</Text>
-          <Text>Model:</Text>
+          <Text style={styles.DetailLabel}>Model:</Text>
           <Text>{vehicle.model}</Text>
-          <Text>Manufacturer:</Text>
+          <Text style={styles.DetailLabel}>Manufacturer:</Text>
           <Text>{vehicle.manufacturer}</Text>
-          <Text>Cost:</Text>
+          <Text style={styles.DetailLabel}>Cost:</Text>
           <Text>{vehicle.const_in_credits}</Text>
-          <Text>Consumables:</Text>
+          <Text style={styles.DetailLabel}>Consumables:</Text>
           <Text>{vehicle.consumables}</Text>
-          <Text>Capacity:</Text>
+          <Text style={styles.DetailLabel}>Capacity:</Text>
           <Text>{vehicle.cargo_capacity}</Text>
-          <Text>Vehicle Class:</Text>
+          <Text style={styles.DetailLabel}>Vehicle Class:</Text>
           <Text>{vehicle.vehicle_class}</Text>
         </View>
       ) : null}
       {starship.starship_class ? (
         <View style={styles.Container}>
-          <Text>Name:</Text>
+          <Text style={styles.DetailLabel}>Name:</Text>
           <Text>{starship.name}</Text>
+          <Text style={styles.DetailLabel}>Model:</Text>
+          <Text>{starship.model}</Text>
+          <Text style={styles.DetailLabel}>Manufacturer:</Text>
+          <Text>{starship.manufacturer}</Text>
+          <Text style={styles.DetailLabel}>Lenght:</Text>
+          <Text>{starship.lenght}</Text>
         </View>
       ) : null}
     </View>
@@ -115,5 +126,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF',
     marginBottom: 10,
     marginTop: 28,
+  },
+  DetailLabel: {
+    fontSize: 16,
+    marginTop: 5,
   },
 });

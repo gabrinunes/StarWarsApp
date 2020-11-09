@@ -22,11 +22,16 @@ interface Characters {
   starships: Array<string>;
 }
 
+interface Planet {
+  name: string;
+}
+
 export default function ResultLit() {
   const route = useRoute();
   const {goBack} = useNavigation();
   const {addFavorites, favorites} = useFavorites();
   const [character, SetCharacter] = useState<Characters[]>();
+  const [planets, SetPlanets] = useState<Planet | undefined>();
   const searchText = route.params.search;
   const navigation = useNavigation();
   useEffect(() => {
@@ -35,8 +40,19 @@ export default function ResultLit() {
       .then((res) => SetCharacter(res.data.results));
   }, [searchText]);
 
-  function handleSelected(payload: Array<string>) {
+  function handleSelected(payload: string) {
     navigation.navigate('Detail', {payload});
+  }
+
+  async function DisplayPlanet(payload: string) {
+    const response = await api.get(payload);
+    SetPlanets(response.data);
+    setTimeout(ClearDisplayPlanet, 1000);
+  }
+
+  function ClearDisplayPlanet() {
+    SetPlanets('');
+    console.log('executar uma vez');
   }
 
   const favFind = favorites.find((fav) => fav === searchText);
@@ -70,13 +86,16 @@ export default function ResultLit() {
             <Text style={styles.characterLabel}>Height:</Text>
             <Text style={styles.characterLabelText}>{char.height}</Text>
             <Text style={styles.characterLabel}>HomeWorld:</Text>
-            <Text style={styles.characterLabelText}>{char.homeworld}</Text>
+            <TouchableOpacity onPress={() => DisplayPlanet(char.homeworld)}>
+              <Text style={styles.characterLabelText}>{char.homeworld}</Text>
+              <Text style={styles.characterLabelText}>{planets?.name}</Text>
+            </TouchableOpacity>
 
             <Text style={styles.characterLabel}>Films:</Text>
 
-            {char.films.map((films, id) => (
+            {char.films.map((films, id1) => (
               <TouchableOpacity onPress={() => handleSelected(films)}>
-                <Text key={id} style={styles.characterLabelText}>
+                <Text key={id1} style={styles.characterLabelText}>
                   {films}
                 </Text>
               </TouchableOpacity>
@@ -84,9 +103,9 @@ export default function ResultLit() {
 
             <Text style={styles.characterLabel}>Vehicles:</Text>
 
-            {char.vehicles.map((vehicles, id) => (
+            {char.vehicles.map((vehicles, id2) => (
               <TouchableOpacity onPress={() => handleSelected(vehicles)}>
-                <Text key={id} style={styles.characterLabelText}>
+                <Text key={id2} style={styles.characterLabelText}>
                   {vehicles}
                 </Text>
               </TouchableOpacity>
@@ -94,9 +113,9 @@ export default function ResultLit() {
 
             <Text style={styles.characterLabel}>Starships:</Text>
 
-            {char.starships.map((starships, id) => (
+            {char.starships.map((starships, id3) => (
               <TouchableOpacity onPress={() => handleSelected(starships)}>
-                <Text key={id} style={styles.characterLabelText}>
+                <Text key={id3} style={styles.characterLabelText}>
                   {starships}
                 </Text>
               </TouchableOpacity>
